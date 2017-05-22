@@ -17,7 +17,7 @@ repositories {
 - Step 2. 在你的app build.gradle 的 dependencies 中添加依赖
 ```
 dependencies {
-	compile 'com.github.wenchaosong:customSpinner:1.0.0'
+	compile 'com.github.wenchaosong:customSpinner:1.0.2'
 }
 ```
 - Step 3
