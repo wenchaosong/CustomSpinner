@@ -99,7 +99,6 @@ public class NiceSpinner extends AppCompatTextView {
     private void init(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NiceSpinner);
 
-        setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
         setClickable(true);
 
         textColor = typedArray.getColor(R.styleable.NiceSpinner_ns_textTint, getDefaultTextColor(context));
