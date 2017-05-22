@@ -1,0 +1,10 @@
+<resources>
+
+    <declare-styleable name="NiceSpinner">
+        <attr name="ns_arrowTint" format="color" />
+        <attr name="ns_hideArrow" format="boolean" />
+        <attr name="ns_backgroundSelector" format="integer"/>
+        <attr name="ns_textTint" format="color"/>
+    </declare-styleable>
+
+</resources>
