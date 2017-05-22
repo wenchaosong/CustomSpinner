@@ -20,6 +20,9 @@ dependencies {
 	compile 'com.github.wenchaosong:customSpinner:1.0.0'
 }
 ```
+- Step 3
+
+```
 xml
 
 	<view.customspinner.NiceSpinner
@@ -28,10 +31,13 @@ xml
         android:layout_height="wrap_content"
         android:hint="请选择"
         android:lines="1"/>
+```
 
+```
 代码
 
 	NiceSpinner niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
         niceSpinner.attachDataSource(R.layout.child, dataset);
+```
     
