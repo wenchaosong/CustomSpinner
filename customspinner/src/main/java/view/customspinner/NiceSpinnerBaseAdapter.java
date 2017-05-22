@@ -1,8 +1,6 @@
 package view.customspinner;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,14 +11,12 @@ public abstract class NiceSpinnerBaseAdapter<T> extends BaseAdapter {
     private Context mContext;
     public int mSelectedIndex;
     private int mTextColor;
-    private int mBackgroundSelector;
     private int layoutId;
 
-    public NiceSpinnerBaseAdapter(Context context, int textColor, int backgroundSelector, int layoutId) {
+    public NiceSpinnerBaseAdapter(Context context, int textColor, int layoutId) {
         mContext = context;
         this.layoutId = layoutId;
         mTextColor = textColor;
-        mBackgroundSelector = backgroundSelector;
     }
 
     @Override
@@ -33,10 +29,6 @@ public abstract class NiceSpinnerBaseAdapter<T> extends BaseAdapter {
             }
             convertView = View.inflate(mContext, layoutId, null);
             textView = (TextView) convertView.findViewById(R.id.tv_tinted_spinner);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                textView.setBackground(ContextCompat.getDrawable(mContext, mBackgroundSelector));
-            }
 
             convertView.setTag(new ViewHolder(textView));
         } else {
@@ -67,8 +59,6 @@ public abstract class NiceSpinnerBaseAdapter<T> extends BaseAdapter {
 
     @Override
     public abstract int getCount();
-
-    public abstract T getItemInDataset(int position);
 
     protected static class ViewHolder {
 

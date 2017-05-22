@@ -8,8 +8,8 @@ public class NiceSpinnerAdapter<T> extends NiceSpinnerBaseAdapter {
 
     private final List<T> mItems;
 
-    public NiceSpinnerAdapter(Context context, List<T> items, int textColor, int backgroundSelector, int id) {
-        super(context, textColor, backgroundSelector, id);
+    public NiceSpinnerAdapter(Context context, List<T> items, int textColor, int id) {
+        super(context, textColor, id);
         mItems = items;
     }
 
@@ -20,11 +20,6 @@ public class NiceSpinnerAdapter<T> extends NiceSpinnerBaseAdapter {
 
     @Override
     public T getItem(int position) {
-        return mItems.get(position);
-    }
-
-    @Override
-    public T getItemInDataset(int position) {
         return mItems.get(position);
     }
 }

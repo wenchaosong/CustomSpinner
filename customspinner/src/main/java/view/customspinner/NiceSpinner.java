@@ -2,11 +2,9 @@ package view.customspinner;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -25,13 +23,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
-
 import java.util.List;
 
 public class NiceSpinner extends AppCompatTextView {
 
     private static final int MAX_LEVEL = 10000;
-    private static final int DEFAULT_ELEVATION = 16;
     private static final String INSTANCE_STATE = "instance_state";
     private static final String SELECTED_INDEX = "selected_index";
     private static final String IS_POPUP_SHOWING = "is_popup_showing";
@@ -45,7 +41,6 @@ public class NiceSpinner extends AppCompatTextView {
     private AdapterView.OnItemSelectedListener onItemSelectedListener;
     private boolean isArrowHide;
     private int textColor;
-    private int backgroundSelector;
 
     public NiceSpinner(Context context) {
         super(context);
@@ -81,7 +76,7 @@ public class NiceSpinner extends AppCompatTextView {
             selectedIndex = bundle.getInt(SELECTED_INDEX);
 
             if (adapter != null) {
-                setText(adapter.getItemInDataset(selectedIndex).toString());
+                setText(adapter.getItem(selectedIndex).toString());
                 adapter.notifyItemSelected(selectedIndex);
             }
 
@@ -102,17 +97,11 @@ public class NiceSpinner extends AppCompatTextView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        Resources resources = getResources();
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NiceSpinner);
-        int defaultPadding = resources.getDimensionPixelSize(R.dimen.one_and_a_half_grid_unit);
 
         setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
-        setPadding(resources.getDimensionPixelSize(R.dimen.three_grid_unit), defaultPadding, defaultPadding,
-                defaultPadding);
         setClickable(true);
 
-        backgroundSelector = typedArray.getResourceId(R.styleable.NiceSpinner_ns_backgroundSelector, R.drawable.selector);
-        setBackgroundResource(backgroundSelector);
         textColor = typedArray.getColor(R.styleable.NiceSpinner_ns_textTint, getDefaultTextColor(context));
         setTextColor(textColor);
 
@@ -126,9 +115,6 @@ public class NiceSpinner extends AppCompatTextView {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= selectedIndex && position < adapter.getCount()) {
-                    position++;
-                }
 
                 selectedIndex = position;
 
@@ -141,7 +127,7 @@ public class NiceSpinner extends AppCompatTextView {
                 }
 
                 adapter.notifyItemSelected(position);
-                setText(adapter.getItemInDataset(position).toString());
+                setText(adapter.getItem(position).toString());
                 dismissDropDown();
             }
         });
@@ -150,13 +136,7 @@ public class NiceSpinner extends AppCompatTextView {
         popupWindow.setContentView(listView);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.setElevation(DEFAULT_ELEVATION);
-            popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.spinner_drawable));
-        } else {
-            popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.drop_down_shadow));
-        }
+        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.spinner_drawable));
 
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
 
@@ -208,7 +188,7 @@ public class NiceSpinner extends AppCompatTextView {
             if (position >= 0 && position <= adapter.getCount()) {
                 adapter.notifyItemSelected(position);
                 selectedIndex = position;
-                setText(adapter.getItemInDataset(position).toString());
+                setText(adapter.getItem(position).toString());
             } else {
                 throw new IllegalArgumentException("Position must be lower than adapter count!");
             }
@@ -224,12 +204,12 @@ public class NiceSpinner extends AppCompatTextView {
     }
 
     public <T> void attachDataSource(int layoutId, List<T> list) {
-        adapter = new NiceSpinnerAdapter<>(getContext(), list, textColor, backgroundSelector, layoutId);
+        adapter = new NiceSpinnerAdapter<>(getContext(), list, textColor, layoutId);
         setAdapterInternal(adapter);
     }
 
     public void setAdapter(ListAdapter adapter) {
-        this.adapter = new NiceSpinnerAdapterWrapper(getContext(), adapter, textColor, backgroundSelector);
+        this.adapter = new NiceSpinnerAdapterWrapper(getContext(), adapter, textColor);
         setAdapterInternal(this.adapter);
     }
 
