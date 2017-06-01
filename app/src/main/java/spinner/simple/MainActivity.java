@@ -3,6 +3,9 @@ package spinner.simple;
 import android.app.Activity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import view.customspinner.MaterialSpinner;
 
 /**
@@ -11,13 +14,19 @@ import view.customspinner.MaterialSpinner;
  */
 public class MainActivity extends Activity {
 
+    private List<String> list = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        String[] ITEMS = {"Item 11111111111111", "Item 2", "Item 3", "Item 4"};
-        MaterialSpinner spinner = (MaterialSpinner) findViewById(R.id.spinner);
-        spinner.setData(this, R.layout.spinner_item, ITEMS);
+        list.add("选项一");
+        list.add("选项二");
+        list.add("选项三");
+        list.add("选项四");
+        MaterialSpinner spinner1 = (MaterialSpinner) findViewById(R.id.spinner);
+        spinner1.setItemData(list);
+
     }
 }
