@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,10 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
         return mText.getText().toString();
     }
 
+    public void setText(String text) {
+        mText.setText(text);
+    }
+
     public int getSelectIndex() {
         return index;
     }
@@ -66,7 +71,8 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
         LayoutInflater.from(mContext).inflate(R.layout.spinner_layout, this);
         mText = (TextView) findViewById(R.id.sipnner_text);
         mArrow = (ImageView) findViewById(R.id.spinner_arrow);
-        mArrow.setOnClickListener(this);
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.spinner_container);
+        container.setOnClickListener(this);
         mArrow.setRotation(0);
         TypedArray tArray = mContext.obtainStyledAttributes(attrs,
                 R.styleable.EditSpinner);
@@ -76,7 +82,10 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
         int textColor = tArray.getColor(R.styleable.EditSpinner_es_textColor, Color.BLACK);
         mText.setTextColor(textColor);
 
-        int dimension = tArray.getDimensionPixelSize(R.styleable.EditSpinner_es_arrowSize, dpToPx(12));
+        int gravity = tArray.getInt(R.styleable.EditSpinner_es_gravity, -1);
+        mText.setGravity(gravity >= 0 ? gravity : Gravity.CENTER);
+
+        int dimension = tArray.getDimensionPixelSize(R.styleable.EditSpinner_es_arrowSize, dpToPx(20));
         ViewGroup.LayoutParams params = mArrow.getLayoutParams();
         params.width = dimension;
         params.height = dimension;
@@ -126,7 +135,7 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
         if (adapter == null || popupWindow == null) {
             return;
         }
-        if (v.getId() == R.id.spinner_arrow)
+        if (v.getId() == R.id.spinner_container)
             if (popupWindow.isShowing()) {
                 popupWindow.dismiss();
             } else {

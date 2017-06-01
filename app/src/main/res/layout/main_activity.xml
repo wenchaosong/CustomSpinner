@@ -7,11 +7,14 @@
 
     <view.customspinner.MaterialSpinner
         android:id="@+id/spinner"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        app:es_arrowSize="24dp"
+        android:background="#f2f2f2"
+        app:es_arrowSize="20dp"
+        app:es_gravity="center"
         app:es_hint="EditSpinner Test"
         app:es_hintColor="#9a9a9a"
         app:es_textColor="#000000"/>
+
 </RelativeLayout>
