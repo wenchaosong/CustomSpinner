@@ -31,6 +31,7 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
     private SimpleAdapter adapter;
     private Animation mAnimation;
     private Animation mResetAnimation;
+    private int index = 0;
 
     public MaterialSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,6 +43,14 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
     public void setItemData(List<String> data) {
         adapter = new SimpleAdapter(mContext, data);
         setBaseAdapter(adapter);
+    }
+
+    public String getText() {
+        return mText.getText().toString();
+    }
+
+    public int getSelectIndex() {
+        return index;
     }
 
     private void initAnimation() {
@@ -127,6 +136,7 @@ public class MaterialSpinner extends RelativeLayout implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        index = position;
         mText.setText(((SimpleAdapter) parent.getAdapter()).getItem(position));
         popupWindow.dismiss();
     }
