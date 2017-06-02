@@ -22,11 +22,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_activity);
 
         list.add("选项一");
-        list.add("选项二");
+        list.add("选项二选项二选项二选项二选项二选项二选项二");
         list.add("选项三");
         list.add("选项四");
-        MaterialSpinner spinner1 = (MaterialSpinner) findViewById(R.id.spinner);
-        spinner1.setItemData(list);
-
+        MaterialSpinner mEditSpinner = (MaterialSpinner) findViewById(R.id.edit_spinner);
+        mEditSpinner.setItems(list);
     }
 }

@@ -5,16 +5,41 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/edit_spinner"
+        android:background="#9a9a9a"
+        android:text="选项选项"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_spinner"
+        android:layout_centerHorizontal="true"
+        android:text="选项选项选项选项"/>
+
     <view.customspinner.MaterialSpinner
-        android:id="@+id/spinner"
+        android:id="@+id/edit_spinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="#f2f2f2"
-        app:es_arrowSize="20dp"
-        app:es_gravity="center"
-        app:es_hint="EditSpinner Test"
-        app:es_hintColor="#9a9a9a"
-        app:es_textColor="#000000"/>
+        android:gravity="center"
+        android:hint="hint"
+        />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_spinner"
+        android:layout_centerHorizontal="true"
+        android:text="选项选项选项选项"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/edit_spinner"
+        android:text="选项选项"/>
 </RelativeLayout>

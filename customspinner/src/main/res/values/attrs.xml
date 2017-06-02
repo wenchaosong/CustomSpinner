@@ -1,19 +1,8 @@
 <resources>
 
-    <declare-styleable name="EditSpinner">
-        <attr name="es_hint" format="string"/>
-        <attr name="es_textColor" format="color|reference"/>
-        <attr name="es_hintColor" format="color|reference"/>
-        <attr name="es_arrowSize" format="dimension"/>
-        <attr name="es_gravity">
-            <flag name="top" value="0x30"/>
-            <flag name="bottom" value="0x50"/>
-            <flag name="left" value="0x03"/>
-            <flag name="right" value="0x05"/>
-            <flag name="center_vertical" value="0x10"/>
-            <flag name="center_horizontal" value="0x01"/>
-            <flag name="center" value="0x11"/>
-        </attr>
+    <declare-styleable name="MaterialSpinner">
+        <attr name="materialSpinner_hide_arrow" format="boolean"/>
+        <attr name="materialSpinner_popup_background" format="reference"/>
     </declare-styleable>
 
 </resources>

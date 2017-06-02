@@ -1,158 +1,276 @@
 package view.customspinner;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListPopupWindow;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.List;
 
-public class MaterialSpinner extends RelativeLayout implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MaterialSpinner extends AppCompatTextView {
 
-    private TextView mText;
-    private ImageView mArrow;
-    private Context mContext;
-    private ListPopupWindow popupWindow;
-    private SimpleAdapter adapter;
-    private Animation mAnimation;
-    private Animation mResetAnimation;
-    private int index = 0;
+    private OnItemSelectedListener onItemSelectedListener;
+    private ListAdapter adapter;
+    private PopupWindow popupWindow;
+    private ListView listView;
+    private Drawable arrowDrawable;
+    private boolean hideArrow;
+    private int selectedIndex;
+
+    public MaterialSpinner(Context context) {
+        super(context);
+        init(context, null);
+    }
 
     public MaterialSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mContext = context;
-        initView(attrs);
-        initAnimation();
+        init(context, attrs);
     }
 
-    public void setItemData(List<String> data) {
-        adapter = new SimpleAdapter(mContext, data);
-        setBaseAdapter(adapter);
+    public MaterialSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
     }
 
-    public String getText() {
-        return mText.getText().toString();
-    }
+    private void init(Context context, AttributeSet attrs) {
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MaterialSpinner);
 
-    public void setText(String text) {
-        mText.setText(text);
-    }
-
-    public int getSelectIndex() {
-        return index;
-    }
-
-    private void initAnimation() {
-        mAnimation = new RotateAnimation(0, -180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        mAnimation.setDuration(200);
-        mAnimation.setFillAfter(true);
-        mResetAnimation = new RotateAnimation(-180, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        mResetAnimation.setDuration(200);
-        mResetAnimation.setFillAfter(true);
-    }
-
-    private void initView(AttributeSet attrs) {
-        LayoutInflater.from(mContext).inflate(R.layout.spinner_layout, this);
-        mText = (TextView) findViewById(R.id.sipnner_text);
-        mArrow = (ImageView) findViewById(R.id.spinner_arrow);
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.spinner_container);
-        container.setOnClickListener(this);
-        mArrow.setRotation(0);
-        TypedArray tArray = mContext.obtainStyledAttributes(attrs,
-                R.styleable.EditSpinner);
-        mText.setHint(tArray.getString(R.styleable.EditSpinner_es_hint));
-        int hintColor = tArray.getColor(R.styleable.EditSpinner_es_hintColor, Color.GRAY);
-        mText.setHintTextColor(hintColor);
-        int textColor = tArray.getColor(R.styleable.EditSpinner_es_textColor, Color.BLACK);
-        mText.setTextColor(textColor);
-
-        int gravity = tArray.getInt(R.styleable.EditSpinner_es_gravity, -1);
-        mText.setGravity(gravity >= 0 ? gravity : Gravity.CENTER);
-
-        int dimension = tArray.getDimensionPixelSize(R.styleable.EditSpinner_es_arrowSize, dpToPx(20));
-        ViewGroup.LayoutParams params = mArrow.getLayoutParams();
-        params.width = dimension;
-        params.height = dimension;
-        mArrow.setLayoutParams(params);
-
-        tArray.recycle();
-    }
-
-    private void setBaseAdapter(BaseAdapter adapter) {
-        if (popupWindow == null) {
-            initPopupWindow();
+        Drawable bg;
+        try {
+            hideArrow = ta.getBoolean(R.styleable.MaterialSpinner_materialSpinner_hide_arrow, false);
+            bg = ta.getDrawable(R.styleable.MaterialSpinner_materialSpinner_popup_background);
+        } finally {
+            ta.recycle();
         }
-        popupWindow.setAdapter(adapter);
-    }
 
-    private void initPopupWindow() {
-        popupWindow = new ListPopupWindow(mContext) {
+        if (!hideArrow) {
+            arrowDrawable = getResources().getDrawable(R.drawable.ms__arrow);
+            setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDrawable, null);
+        }
+
+        setClickable(true);
+        setLines(1);
+
+        listView = new ListView(context);
+        listView.setId(getId());
+        listView.setDivider(null);
+        listView.setItemsCanFocus(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void dismiss() {
-                super.dismiss();
-                mArrow.startAnimation(mResetAnimation);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedIndex = position;
+                Object item = adapter.getItem(position);
+                setText(item.toString());
+                collapse();
+                if (onItemSelectedListener != null) {
+                    onItemSelectedListener.onItemSelected(MaterialSpinner.this, position, id, item);
+                }
             }
+        });
 
-            @Override
-            public void show() {
-                super.show();
-                mArrow.startAnimation(mAnimation);
-            }
-        };
-        popupWindow.setOnItemClickListener(this);
-        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        popupWindow.setPromptPosition(ListPopupWindow.POSITION_PROMPT_BELOW);
-        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setAnchorView(mText);
+        popupWindow = new PopupWindow(context);
+        popupWindow.setContentView(listView);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+        popupWindow.setFocusable(true);
+        if (bg != null)
+            popupWindow.setBackgroundDrawable(bg);
+        else
+            popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_bg));
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
             @Override
             public void onDismiss() {
-                popupWindow.dismiss();
+                if (!hideArrow) {
+                    animateArrow(false);
+                }
             }
         });
     }
 
     @Override
-    public void onClick(View v) {
-        if (adapter == null || popupWindow == null) {
-            return;
-        }
-        if (v.getId() == R.id.spinner_container)
-            if (popupWindow.isShowing()) {
-                popupWindow.dismiss();
-            } else {
-                popupWindow.show();
-            }
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        popupWindow.setWidth(MeasureSpec.getSize(widthMeasureSpec));
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        index = position;
-        mText.setText(((SimpleAdapter) parent.getAdapter()).getItem(position));
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (isEnabled() && isClickable()) {
+                if (!popupWindow.isShowing()) {
+                    expand();
+                } else {
+                    collapse();
+                }
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("state", super.onSaveInstanceState());
+        bundle.putInt("selected_index", selectedIndex);
+        if (popupWindow != null) {
+            bundle.putBoolean("is_popup_showing", popupWindow.isShowing());
+            collapse();
+        } else {
+            bundle.putBoolean("is_popup_showing", false);
+        }
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable savedState) {
+        if (savedState instanceof Bundle) {
+            Bundle bundle = (Bundle) savedState;
+            selectedIndex = bundle.getInt("selected_index");
+            if (adapter != null) {
+                setText((String) adapter.getItem(selectedIndex));
+            }
+            if (bundle.getBoolean("is_popup_showing")) {
+                if (popupWindow != null) {
+                    // Post the show request into the looper to avoid bad token exception
+                    post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            expand();
+                        }
+                    });
+                }
+            }
+            savedState = bundle.getParcelable("state");
+        }
+        super.onRestoreInstanceState(savedState);
+    }
+
+    /**
+     * @return the selected item position
+     */
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+
+    /**
+     * Set the default spinner item using its index
+     *
+     * @param position the item's position
+     */
+    public void setSelectedIndex(int position) {
+        if (adapter != null) {
+            if (position >= 0 && position <= adapter.getCount()) {
+                selectedIndex = position;
+                setText((String) adapter.getItem(position));
+            } else {
+                throw new IllegalArgumentException("Position must be lower than adapter count!");
+            }
+        }
+    }
+
+    /**
+     * Register a callback to be invoked when an item in the dropdown is selected.
+     *
+     * @param onItemSelectedListener The callback that will run
+     */
+    public void setOnItemSelectedListener(@Nullable OnItemSelectedListener onItemSelectedListener) {
+        this.onItemSelectedListener = onItemSelectedListener;
+    }
+
+    public void setAnimationStyle(int anim) {
+        popupWindow.setAnimationStyle(anim);
+    }
+
+    /**
+     * Set the dropdown items
+     *
+     * @param items A list of items
+     * @param <T>   The item type
+     */
+    public <T> void setItems(@NonNull List<T> items) {
+        adapter = new MaterialSpinnerAdapter<>(getContext(), items);
+        listView.setAdapter(adapter);
+    }
+
+    public void setAdapter(ListAdapter adapter) {
+        this.adapter = adapter;
+        listView.setAdapter(adapter);
+    }
+
+    /**
+     * Show the dropdown menu
+     */
+    public void expand() {
+        if (!hideArrow) {
+            animateArrow(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            popupWindow.setOverlapAnchor(false);
+            popupWindow.showAsDropDown(this);
+        } else {
+            int[] location = new int[2];
+            getLocationOnScreen(location);
+            int x = location[0];
+            int y = getHeight() + location[1];
+            popupWindow.showAtLocation(this, Gravity.TOP | Gravity.START, x, y);
+        }
+    }
+
+    /**
+     * Closes the dropdown menu
+     */
+    public void collapse() {
+        if (!hideArrow) {
+            animateArrow(false);
+        }
         popupWindow.dismiss();
     }
 
-    private int dpToPx(float dp) {
-        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
-        return Math.round(px);
+    private void animateArrow(boolean shouldRotateUp) {
+        int start = shouldRotateUp ? 0 : 10000;
+        int end = shouldRotateUp ? 10000 : 0;
+        ObjectAnimator animator = ObjectAnimator.ofInt(arrowDrawable, "level", start, end);
+        animator.start();
     }
+
+    /**
+     * Interface definition for a callback to be invoked when an item in this view has been selected.
+     *
+     * @param <T> Adapter item type
+     */
+    private interface OnItemSelectedListener<T> {
+
+        /**
+         * <p>Callback method to be invoked when an item in this view has been selected. This callback is invoked only when
+         * the newly selected position is different from the previously selected position or if there was no selected
+         * item.</p>
+         *
+         * @param view     The {@link MaterialSpinner} view
+         * @param position The position of the view in the adapter
+         * @param id       The row id of the item that is selected
+         * @param item     The selected item
+         */
+        void onItemSelected(MaterialSpinner view, int position, long id, T item);
+
+    }
+
 }
