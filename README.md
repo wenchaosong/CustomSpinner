@@ -17,7 +17,7 @@ repositories {
 - Step 2. 在你的app build.gradle 的 dependencies 中添加依赖
 ```
 dependencies {
-	compile 'com.github.wenchaosong:customSpinner:1.0.2'
+	compile 'com.github.wenchaosong:customSpinner:1.0.6'
 }
 ```
 - Step 3
@@ -25,19 +25,21 @@ dependencies {
 ```
 xml
 
-	<view.customspinner.NiceSpinner
-        android:id="@+id/nice_spinner"
-        android:layout_width="match_parent"
+	<view.customspinner.MaterialSpinner
+        android:id="@+id/spinner"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="请选择"
-        android:lines="1"/>
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:hint="hint"
+        />
 ```
 
 ```
 代码
 
-	NiceSpinner niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
-        niceSpinner.attachDataSource(R.layout.child, dataset);
+        MaterialSpinner mEditSpinner = (MaterialSpinner) findViewById(R.id.spinner);
+        mEditSpinner.setItems(dataset);
 ```
     
