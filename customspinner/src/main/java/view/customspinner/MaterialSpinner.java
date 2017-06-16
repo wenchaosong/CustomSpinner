@@ -47,12 +47,12 @@ public class MaterialSpinner extends AppCompatTextView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MaterialSpinner);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CS_MaterialSpinner);
 
         Drawable bg;
         try {
-            hideArrow = ta.getBoolean(R.styleable.MaterialSpinner_materialSpinner_hide_arrow, false);
-            bg = ta.getDrawable(R.styleable.MaterialSpinner_materialSpinner_popup_background);
+            hideArrow = ta.getBoolean(R.styleable.CS_MaterialSpinner_materialSpinner_hide_arrow, false);
+            bg = ta.getDrawable(R.styleable.CS_MaterialSpinner_materialSpinner_popup_background);
         } finally {
             ta.recycle();
         }
