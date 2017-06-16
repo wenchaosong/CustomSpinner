@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -192,7 +191,7 @@ public class MaterialSpinner extends AppCompatTextView {
      *
      * @param onItemSelectedListener The callback that will run
      */
-    public void setOnItemSelectedListener(@Nullable OnItemSelectedListener onItemSelectedListener) {
+    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
         this.onItemSelectedListener = onItemSelectedListener;
     }
 
@@ -257,7 +256,7 @@ public class MaterialSpinner extends AppCompatTextView {
      *
      * @param <T> Adapter item type
      */
-    private interface OnItemSelectedListener<T> {
+    public interface OnItemSelectedListener<T> {
 
         /**
          * <p>Callback method to be invoked when an item in this view has been selected. This callback is invoked only when
