@@ -1,6 +1,6 @@
 <resources>
 
-    <declare-styleable name="MaterialSpinner">
+    <declare-styleable name="CS_MaterialSpinner">
         <attr name="materialSpinner_hide_arrow" format="boolean"/>
         <attr name="materialSpinner_popup_background" format="reference"/>
     </declare-styleable>
