@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,9 +67,8 @@ public class MaterialSpinner extends AppCompatTextView {
         if (!hideArrow) {
             if (arrowDrawable == null)
                 arrowDrawable = getResources().getDrawable(R.drawable.ms__arrow);
-            Bitmap bitmap = ((BitmapDrawable) arrowDrawable).getBitmap();
-            Drawable drawable = new BitmapDrawable(getResources(), getBitmap(bitmap, width, height));
-            setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+            arrowDrawable.setBounds(0, 0, width, height);
+            setCompoundDrawables(null, null, arrowDrawable, null);
         }
 
         setClickable(true);

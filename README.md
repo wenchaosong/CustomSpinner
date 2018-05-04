@@ -17,7 +17,7 @@ repositories {
 - Step 2. 在你的app build.gradle 的 dependencies 中添加依赖
 ```
 dependencies {
-	compile 'com.github.wenchaosong:customSpinner:1.1.0'
+	compile 'com.github.wenchaosong:customSpinner:1.1.1'
 }
 ```
 - Step 3
@@ -33,11 +33,19 @@ xml
         android:gravity="center"
         android:hint="提示"
         android:textColor="#0000ff"
-        app:arrow="@drawable/arrow"
+        app:arrow="@drawable/rotate_arrow"
         app:arrow_height="10dp"
         app:arrow_width="15dp"
         app:hide_arrow="false"
         app:popup_background="@color/bg"
+
+    <rotate xmlns:android="http://schemas.android.com/apk/res/android"
+            android:drawable="@drawable/arrow"
+            android:duration="200"
+            android:fromDegrees="0"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="180" />
 ```
 
 ```
