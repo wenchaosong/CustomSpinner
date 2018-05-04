@@ -2,7 +2,11 @@ package view.customspinner;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +34,7 @@ public class MaterialSpinner extends AppCompatTextView {
     private Drawable arrowDrawable;
     private boolean hideArrow;
     private int selectedIndex;
+    private int width, height;
 
     public MaterialSpinner(Context context) {
         super(context);
@@ -47,19 +52,25 @@ public class MaterialSpinner extends AppCompatTextView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CS_MaterialSpinner);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MaterialSpinner);
 
         Drawable bg;
         try {
-            hideArrow = ta.getBoolean(R.styleable.CS_MaterialSpinner_materialSpinner_hide_arrow, false);
-            bg = ta.getDrawable(R.styleable.CS_MaterialSpinner_materialSpinner_popup_background);
+            hideArrow = ta.getBoolean(R.styleable.MaterialSpinner_hide_arrow, false);
+            bg = ta.getDrawable(R.styleable.MaterialSpinner_popup_background);
+            width = ta.getDimensionPixelSize(R.styleable.MaterialSpinner_arrow_width, dpToPx(15));
+            height = ta.getDimensionPixelSize(R.styleable.MaterialSpinner_arrow_height, dpToPx(10));
+            arrowDrawable = ta.getDrawable(R.styleable.MaterialSpinner_arrow);
         } finally {
             ta.recycle();
         }
 
         if (!hideArrow) {
-            arrowDrawable = getResources().getDrawable(R.drawable.ms__arrow);
-            setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDrawable, null);
+            if (arrowDrawable == null)
+                arrowDrawable = getResources().getDrawable(R.drawable.ms__arrow);
+            Bitmap bitmap = ((BitmapDrawable) arrowDrawable).getBitmap();
+            Drawable drawable = new BitmapDrawable(getResources(), getBitmap(bitmap, width, height));
+            setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
         }
 
         setClickable(true);
@@ -108,6 +119,30 @@ public class MaterialSpinner extends AppCompatTextView {
         popupWindow.setWidth(MeasureSpec.getSize(widthMeasureSpec));
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    /**
+     * 缩放图片
+     */
+    private Bitmap getBitmap(Bitmap bm, int newWidth, int newHeight) {
+        // 获得图片的宽高
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例
+        float scaleWidth = (float) newWidth / width;
+        float scaleHeight = (float) newHeight / height;
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+    }
+
+    /**
+     * 将 dp 转成 px
+     */
+    private static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
     @Override
