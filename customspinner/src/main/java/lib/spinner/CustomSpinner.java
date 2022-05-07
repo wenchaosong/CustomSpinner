@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,11 +28,12 @@ public class CustomSpinner extends AppCompatTextView {
     private OnItemSelectedListener onItemSelectedListener;
     private ListAdapter adapter;
     private PopupWindow popupWindow;
-    private ListView listView;
+    private CustomListView listView;
     private Drawable arrowDrawable;
     private boolean hideArrow;
     private int selectedIndex;
     private int elevation;
+    private int listHeight;
     private int width, height;
 
     public CustomSpinner(Context context) {
@@ -62,6 +61,7 @@ public class CustomSpinner extends AppCompatTextView {
             width = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_arrow_width, dpToPx(15));
             height = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_arrow_height, dpToPx(10));
             elevation = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_elevation, dpToPx(0));
+            listHeight = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_list_height, dpToPx(400));
             arrowDrawable = ta.getDrawable(R.styleable.CustomSpinner_cs_arrow);
         } finally {
             ta.recycle();
@@ -77,7 +77,7 @@ public class CustomSpinner extends AppCompatTextView {
         setClickable(true);
         setLines(1);
 
-        listView = new ListView(context);
+        listView = new CustomListView(context);
         listView.setId(getId());
         listView.setDivider(null);
         listView.setItemsCanFocus(true);
@@ -293,4 +293,27 @@ public class CustomSpinner extends AppCompatTextView {
 
     }
 
+    private class CustomListView extends ListView {
+
+        public CustomListView(Context context) {
+            this(context, null);
+        }
+
+        public CustomListView(Context context, AttributeSet attrs) {
+            this(context, attrs, 0);
+        }
+
+        public CustomListView(Context context, AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            int size = MeasureSpec.getSize(heightMeasureSpec);
+            if (size > listHeight) {
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(listHeight, MeasureSpec.AT_MOST);
+            }
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
 }

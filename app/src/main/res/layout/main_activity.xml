@@ -33,6 +33,7 @@
         app:cs_arrow_width="15dp"
         app:cs_elevation="15dp"
         app:cs_hide_arrow="false"
+        app:cs_list_height="400dp"
         app:cs_popup_background="@color/bg" />
 
     <TextView

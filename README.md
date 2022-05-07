@@ -1,4 +1,5 @@
 # 自定义 Spinner
+[![](https://jitpack.io/v/wenchaosong/CustomSpinner.svg)](https://jitpack.io/#wenchaosong/CustomSpinner)
 
 自定义继承TextView,效果类似 spinner
 在[nice-spinner](https://github.com/arcadefire/nice-spinner)的基础上增加了设置 layout 的构造方法，感谢作者
@@ -17,7 +18,7 @@ repositories {
 - Step 2. 在你的app build.gradle 的 dependencies 中添加依赖
 ```
 dependencies {
-	compile 'com.github.wenchaosong:CustomSpinner:1.2.0'
+	compile 'com.github.wenchaosong:CustomSpinner:1.3.0'
 }
 ```
 - Step 3
@@ -37,6 +38,7 @@ xml
         app:cs_arrow_height="10dp"
         app:cs_arrow_width="15dp"
         app:cs_elevation="15dp"
+        app:cs_list_height="400dp"
         app:cs_hide_arrow="false"
         app:cs_popup_background="@color/bg" />
 

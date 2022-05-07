@@ -25,6 +25,9 @@ public class MainActivity extends Activity {
         list.add("选项二选项二选项二选项二选项二选项二选项二");
         list.add("选项三");
         list.add("选项四");
+        list.add("选项二选项二选项二选项二选项二选项二选项二");
+        list.add("选项三");
+        list.add("选项四");
         CustomSpinner mEditSpinner = (CustomSpinner) findViewById(R.id.edit_spinner);
         mEditSpinner.setItems(list);
     }

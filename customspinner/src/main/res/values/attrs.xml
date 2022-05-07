@@ -6,6 +6,7 @@
         <attr name="cs_arrow_width" format="dimension" />
         <attr name="cs_arrow_height" format="dimension" />
         <attr name="cs_elevation" format="dimension" />
+        <attr name="cs_list_height" format="dimension" />
         <attr name="cs_popup_background" format="reference" />
     </declare-styleable>
 
