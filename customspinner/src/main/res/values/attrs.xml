@@ -1,11 +1,12 @@
 <resources>
 
-    <declare-styleable name="MaterialSpinner">
-        <attr name="hide_arrow" format="boolean" />
-        <attr name="arrow" format="reference" />
-        <attr name="arrow_width" format="dimension" />
-        <attr name="arrow_height" format="dimension" />
-        <attr name="popup_background" format="reference" />
+    <declare-styleable name="CustomSpinner">
+        <attr name="cs_hide_arrow" format="boolean" />
+        <attr name="cs_arrow" format="reference" />
+        <attr name="cs_arrow_width" format="dimension" />
+        <attr name="cs_arrow_height" format="dimension" />
+        <attr name="cs_elevation" format="dimension" />
+        <attr name="cs_popup_background" format="reference" />
     </declare-styleable>
 
 </resources>

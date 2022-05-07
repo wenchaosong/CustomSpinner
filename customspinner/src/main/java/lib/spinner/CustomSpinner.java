@@ -1,4 +1,4 @@
-package view.customspinner;
+package lib.spinner;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -10,8 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -22,9 +20,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import java.util.List;
 
-public class MaterialSpinner extends AppCompatTextView {
+public class CustomSpinner extends AppCompatTextView {
 
     private OnItemSelectedListener onItemSelectedListener;
     private ListAdapter adapter;
@@ -33,33 +34,35 @@ public class MaterialSpinner extends AppCompatTextView {
     private Drawable arrowDrawable;
     private boolean hideArrow;
     private int selectedIndex;
+    private int elevation;
     private int width, height;
 
-    public MaterialSpinner(Context context) {
+    public CustomSpinner(Context context) {
         super(context);
         init(context, null);
     }
 
-    public MaterialSpinner(Context context, AttributeSet attrs) {
+    public CustomSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public MaterialSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MaterialSpinner);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomSpinner);
 
         Drawable bg;
         try {
-            hideArrow = ta.getBoolean(R.styleable.MaterialSpinner_hide_arrow, false);
-            bg = ta.getDrawable(R.styleable.MaterialSpinner_popup_background);
-            width = ta.getDimensionPixelSize(R.styleable.MaterialSpinner_arrow_width, dpToPx(15));
-            height = ta.getDimensionPixelSize(R.styleable.MaterialSpinner_arrow_height, dpToPx(10));
-            arrowDrawable = ta.getDrawable(R.styleable.MaterialSpinner_arrow);
+            hideArrow = ta.getBoolean(R.styleable.CustomSpinner_cs_hide_arrow, false);
+            bg = ta.getDrawable(R.styleable.CustomSpinner_cs_popup_background);
+            width = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_arrow_width, dpToPx(15));
+            height = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_arrow_height, dpToPx(10));
+            elevation = ta.getDimensionPixelSize(R.styleable.CustomSpinner_cs_elevation, dpToPx(0));
+            arrowDrawable = ta.getDrawable(R.styleable.CustomSpinner_cs_arrow);
         } finally {
             ta.recycle();
         }
@@ -78,6 +81,7 @@ public class MaterialSpinner extends AppCompatTextView {
         listView.setId(getId());
         listView.setDivider(null);
         listView.setItemsCanFocus(true);
+        listView.setVerticalScrollBarEnabled(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -87,7 +91,7 @@ public class MaterialSpinner extends AppCompatTextView {
                 setText(item.toString());
                 collapse();
                 if (onItemSelectedListener != null) {
-                    onItemSelectedListener.onItemSelected(MaterialSpinner.this, position, id, item);
+                    onItemSelectedListener.onItemSelected(CustomSpinner.this, position, id, item);
                 }
             }
         });
@@ -97,6 +101,7 @@ public class MaterialSpinner extends AppCompatTextView {
         popupWindow.setOutsideTouchable(true);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
         popupWindow.setFocusable(true);
+        popupWindow.setElevation(elevation);
         if (bg != null)
             popupWindow.setBackgroundDrawable(bg);
         else
@@ -117,23 +122,6 @@ public class MaterialSpinner extends AppCompatTextView {
         popupWindow.setWidth(MeasureSpec.getSize(widthMeasureSpec));
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    /**
-     * 缩放图片
-     */
-    private Bitmap getBitmap(Bitmap bm, int newWidth, int newHeight) {
-        // 获得图片的宽高
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        // 计算缩放比例
-        float scaleWidth = (float) newWidth / width;
-        float scaleHeight = (float) newHeight / height;
-        // 取得想要缩放的matrix参数
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-        // 得到新的图片
-        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
     }
 
     /**
@@ -296,12 +284,12 @@ public class MaterialSpinner extends AppCompatTextView {
          * the newly selected position is different from the previously selected position or if there was no selected
          * item.</p>
          *
-         * @param view     The {@link MaterialSpinner} view
+         * @param view     The {@link CustomSpinner} view
          * @param position The position of the view in the adapter
          * @param id       The row id of the item that is selected
          * @param item     The selected item
          */
-        void onItemSelected(MaterialSpinner view, int position, long id, T item);
+        void onItemSelected(CustomSpinner view, int position, long id, T item);
 
     }
 

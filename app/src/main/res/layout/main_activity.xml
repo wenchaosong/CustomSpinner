@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:text="选项选项选项选项" />
 
-    <view.customspinner.MaterialSpinner
+    <lib.spinner.CustomSpinner
         android:id="@+id/edit_spinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -28,11 +28,12 @@
         android:gravity="center"
         android:hint="提示"
         android:textColor="#0000ff"
-        app:arrow="@drawable/arrow"
-        app:arrow_height="10dp"
-        app:arrow_width="15dp"
-        app:hide_arrow="false"
-        app:popup_background="@color/bg" />
+        app:cs_arrow="@drawable/arrow"
+        app:cs_arrow_height="10dp"
+        app:cs_arrow_width="15dp"
+        app:cs_elevation="15dp"
+        app:cs_hide_arrow="false"
+        app:cs_popup_background="@color/bg" />
 
     <TextView
         android:layout_width="wrap_content"

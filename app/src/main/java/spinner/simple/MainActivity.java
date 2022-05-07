@@ -6,7 +6,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
-import view.customspinner.MaterialSpinner;
+import lib.spinner.CustomSpinner;
 
 /**
  * Author Administrator
@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
         list.add("选项二选项二选项二选项二选项二选项二选项二");
         list.add("选项三");
         list.add("选项四");
-        MaterialSpinner mEditSpinner = (MaterialSpinner) findViewById(R.id.edit_spinner);
+        CustomSpinner mEditSpinner = (CustomSpinner) findViewById(R.id.edit_spinner);
         mEditSpinner.setItems(list);
     }
 }
