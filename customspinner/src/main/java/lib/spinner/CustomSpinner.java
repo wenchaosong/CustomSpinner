@@ -231,6 +231,18 @@ public class CustomSpinner extends AppCompatTextView {
         listView.setAdapter(adapter);
     }
 
+    public void enableArrow(boolean value) {
+        hideArrow = value;
+        if (hideArrow) {
+            if (arrowDrawable == null)
+                arrowDrawable = getResources().getDrawable(R.drawable.ms__arrow);
+            arrowDrawable.setBounds(0, 0, width, height);
+        } else {
+            arrowDrawable = null;
+        }
+        setCompoundDrawables(null, null, arrowDrawable, null);
+    }
+
     public void setAdapter(ListAdapter adapter) {
         this.adapter = adapter;
         listView.setAdapter(adapter);
